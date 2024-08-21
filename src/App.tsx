@@ -9,6 +9,9 @@ import { persistor, store } from "./common/store";
 //Routers
 import HomeScreen from "./modules/home/screens/Home.screen";
 
+//styles
+import "./styles/index.css";
+
 function App() {
   return (
     <Provider store={store}>
