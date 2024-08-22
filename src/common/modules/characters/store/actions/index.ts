@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { Character } from "../../../../types";
 
-export const setCredentials = createAction<{
-  data: any;
+export const setCharacters = createAction<{
+  character: Character[];
 }>("root/setCharacters");

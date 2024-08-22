@@ -1,4 +1,3 @@
-import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
@@ -8,6 +7,7 @@ import { persistor, store } from "./common/store";
 
 //Routers
 import HomeScreen from "./modules/home/screens/Home.screen";
+import TryAgain from "./modules/shared/components/TryAgain";
 
 //styles
 import "./styles/index.css";
@@ -20,6 +20,7 @@ function App() {
           <Router>
             <Routes>
               <Route path="/" element={<HomeScreen />} />
+              <Route path="/TryAgain" element={<TryAgain />} />
             </Routes>
           </Router>
         </ApolloClientProvider>

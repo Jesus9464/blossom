@@ -1,17 +1,18 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { setCredentials } from "../actions";
+import { setCharacters } from "../actions";
+import { Character } from "../../../../types";
 
 interface CharacterState {
-  characters: any[];
+  characters: Character[];
 }
 const initialState: CharacterState = {
   characters: [],
 };
 
 const charactersReducer = createReducer(initialState, (builder) => {
-  builder.addCase(setCredentials, (state, action) => {
-    state.characters = action.payload.data;
+  builder.addCase(setCharacters, (state, action) => {
+    state.characters = action.payload.character;
   });
 });
 
