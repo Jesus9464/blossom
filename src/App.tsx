@@ -13,6 +13,7 @@ import TryAgain from "./modules/shared/components/TryAgain";
 
 //styles
 import "./styles/index.css";
+import NavBar from "./modules/shared/components/Navbar";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <ApolloClientProvider>
           <Router>
+            <NavBar />
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/favorite" element={<FavoriteScreen />} />
