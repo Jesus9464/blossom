@@ -51,7 +51,6 @@ const NavbarComponent: React.FC<Props> = ({
         value={searchTerm}
         filterIcon={filterIcon}
         searchIcon={searchIcon}
-        onClickFilter={() => console.log("abre el modal")}
       />
       <div className="w-full flex ">
         <button
