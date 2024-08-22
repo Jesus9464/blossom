@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../common/store/hooks";
 import {
@@ -23,6 +23,7 @@ type Props = {
 const NavbarContainer: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation(); // Usamos useLocation para obtener la ruta actual
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [characterFilter, setCharacterFilter] = useState<string>("All");
   const [speciesFilter, setSpeciesFilter] = useState<string>("All");
@@ -46,7 +47,6 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
 
   const viewAllInfo = (id: string) => navigate(`/character/${id}`);
 
-  // Aplicar filtros a los personajes generales
   const filteredCharacters = sortedCharacters.filter((character) => {
     const matchesSearch = character.name
       .toLowerCase()
@@ -63,13 +63,11 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
     return matchesSearch && matchesSpeciesFilter && matchesCharacterFilter;
   });
 
-  // Aplicar filtros a los personajes favoritos
   const filteredFavoriteCharacters = sortedFavoriteCharacters.filter(
     (character) =>
       character.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Filtrar personajes que están en favoritos
   const filteredSortedCharacters = filteredCharacters.filter(
     (character) =>
       !favoriteCharacters.some((favorite) => favorite.id === character.id)
@@ -99,6 +97,9 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
     return <Loading />;
   }
 
+  const isMobile = window.innerWidth < 768;
+  const isHome = location.pathname === "/";
+
   return (
     <NavbarComponent
       characters={filteredSortedCharacters}
@@ -115,6 +116,8 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
       activeCharacterId={activeCharacterId}
       onFilterChange={handleFilterChange}
       characterFilter={characterFilter}
+      isHome={isHome}
+      isMobile={isMobile}
     />
   );
 };

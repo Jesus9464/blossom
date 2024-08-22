@@ -8,7 +8,7 @@ import { persistor, store } from "./common/store";
 //Routers
 import CharacterScreen from "./modules/characters/screens/Character.screen";
 import TryAgain from "./modules/shared/components/TryAgain";
-import RedirectToCharacter from "./modules/shared/container/RedirectToCharacter";
+import Home from "./modules/shared/container/Home";
 
 //navbar navigation
 import NavbarContainer from "./modules/shared/container/Navbar";
@@ -24,7 +24,7 @@ function App() {
           <Router>
             <NavbarContainer>
               <Routes>
-                <Route path="/" element={<RedirectToCharacter />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/character/:id" element={<CharacterScreen />} />
                 <Route path="/TryAgain" element={<TryAgain />} />
               </Routes>

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { Character } from "../../../common/types";
 import ItemList from "../../shared/components/ItemList";
 import searchIcon from "../../../assets/icons/search-icon.svg";
@@ -22,6 +22,8 @@ type Props = {
   setSearchTerm: Dispatch<SetStateAction<string>>;
   onFilterChange: (filterType: string, filterValue: string) => void;
   characterFilter: string;
+  isHome: boolean;
+  isMobile: boolean;
 };
 
 const NavbarComponent: React.FC<Props> = ({
@@ -39,94 +41,118 @@ const NavbarComponent: React.FC<Props> = ({
   setSearchTerm,
   onFilterChange,
   characterFilter,
-}) => (
-  <div className="flex flex-col md:flex-row">
-    {/* Aside Section */}
-    <aside className="w-full md:w-[600px] bg-gray-50 p-4 shadow-lg md:sticky md:top-0 md:h-screen md:overflow-y-auto">
-      <h2 className="text-primary-600 font-bold text-xl mb-4">
-        Rick and Morty List
-      </h2>
+  isHome,
+  isMobile,
+}) => {
+  const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
+    null
+  );
 
-      {/* Search Input */}
-      <SearchInput
-        onChange={(e) => setSearchTerm(e.target.value)}
-        value={searchTerm}
-        filterIcon={filterIcon}
-        searchIcon={searchIcon}
-        onFilterChange={onFilterChange}
-      />
-      <div className="w-full flex ">
-        <button
-          onClick={() => {
-            setSortOrder("asc");
-            setSortOrderFvaorite("asc");
-          }}
-          className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4 ${
-            sortOrder === "asc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
-          }`}
-        >
-          Order A-Z
-        </button>
-        <button
-          onClick={() => {
-            setSortOrder("desc");
-            setSortOrderFvaorite("desc");
-          }}
-          className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4  ${
-            sortOrder === "desc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
-          }`}
-        >
-          Order Z-A
-        </button>
+  const handleGoBack = () => {
+    setSelectedCharacter(null);
+  };
+
+  return (
+    <div className={`flex ${isMobile ? "flex-col" : "flex-row"}`}>
+      {(!isMobile || (isMobile && isHome)) && ( // Mostrar lista solo en móvil en Home
+        <aside className="w-full md:w-[600px] bg-gray-50 p-4 shadow-lg md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+          <h2 className="text-primary-600 font-bold text-xl mb-4">
+            Rick and Morty List
+          </h2>
+
+          <SearchInput
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            filterIcon={filterIcon}
+            searchIcon={searchIcon}
+            onFilterChange={onFilterChange}
+          />
+          <div className="w-full flex ">
+            <button
+              onClick={() => {
+                setSortOrder("asc");
+                setSortOrderFvaorite("asc");
+              }}
+              className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4 ${
+                sortOrder === "asc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
+              }`}
+            >
+              Order A-Z
+            </button>
+            <button
+              onClick={() => {
+                setSortOrder("desc");
+                setSortOrderFvaorite("desc");
+              }}
+              className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4  ${
+                sortOrder === "desc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
+              }`}
+            >
+              Order Z-A
+            </button>
+          </div>
+
+          {favoriteCharacters.length > 0 && characterFilter !== "Others" && (
+            <div className="mt-6">
+              <h3 className="text-[#6B7280] mb-2">
+                Starred Characters ({favoriteCharacters.length})
+              </h3>
+
+              <ul className="divide-y divide-gray-200">
+                {favoriteCharacters.map((character) => (
+                  <ItemList
+                    key={character.id}
+                    character={character}
+                    icon={heartGreenIcon}
+                    buttonOnclick={() => deletedToFavorites(character)}
+                    cardOnclick={() => viewAllInfo(character.id)}
+                    isActive={
+                      Number(activeCharacterId) === Number(character.id)
+                    }
+                  />
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {characterFilter !== "Starred" && (
+            <div className="mt-6">
+              <h3 className="text-[#6B7280] mb-2">
+                Characters ({characters.length})
+              </h3>
+              <ul className="divide-y divide-gray-200">
+                {characters.map((character) => (
+                  <ItemList
+                    key={character.id}
+                    character={character}
+                    icon={heartGreyIcon}
+                    buttonOnclick={() => addToFavorites(character)}
+                    cardOnclick={() => viewAllInfo(character.id)}
+                    isActive={
+                      Number(activeCharacterId) === Number(character.id)
+                    }
+                  />
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
+      )}
+
+      <div className={`flex-grow ${isMobile ? "relative" : ""}`}>
+        {selectedCharacter ? (
+          <div className="absolute inset-0 bg-white p-4 z-50">
+            <button onClick={handleGoBack} className="mb-4">
+              Go Back
+            </button>
+            {children}
+          </div>
+        ) : (
+          children
+        )}
       </div>
-
-      {/* Starred Characters Section */}
-      {favoriteCharacters.length > 0 && characterFilter !== "Others" && (
-        <div className="mt-6">
-          <h3 className="text-[#6B7280] mb-2">
-            Starred Characters ({favoriteCharacters.length})
-          </h3>
-
-          <ul className="divide-y divide-gray-200">
-            {favoriteCharacters.map((character) => (
-              <ItemList
-                key={character.id}
-                character={character}
-                icon={heartGreenIcon}
-                buttonOnclick={() => deletedToFavorites(character)}
-                cardOnclick={() => viewAllInfo(character.id)}
-                isActive={Number(activeCharacterId) === Number(character.id)}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* All Characters Section */}
-      {characterFilter !== "Starred" && (
-        <div className="mt-6">
-          <h3 className="text-[#6B7280] mb-2">
-            Characters ({characters.length})
-          </h3>
-          <ul className="divide-y divide-gray-200">
-            {characters.map((character) => (
-              <ItemList
-                key={character.id}
-                character={character}
-                icon={heartGreyIcon}
-                buttonOnclick={() => addToFavorites(character)}
-                cardOnclick={() => viewAllInfo(character.id)}
-                isActive={Number(activeCharacterId) === Number(character.id)}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
-    </aside>
-
-    {/* Main Content - Characters Grid */}
-    <div className="flex-grow">{children}</div>
-  </div>
-);
+    </div>
+  );
+};
 
 export default NavbarComponent;

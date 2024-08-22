@@ -59,7 +59,7 @@ const CharacterContainer = () => {
     }
   };
 
-  const handleGoBack = () => navigate(-1);
+  const handleGoBack = () => navigate("/");
 
   React.useEffect(() => {
     if (error) {
