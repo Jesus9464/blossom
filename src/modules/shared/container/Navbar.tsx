@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../common/store/hooks";
@@ -24,6 +24,8 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [characterFilter, setCharacterFilter] = useState<string>("All");
+  const [speciesFilter, setSpeciesFilter] = useState<string>("All");
 
   const pathnameParams = window.location.pathname;
   const match = pathnameParams.match(/\/character\/(\d+)/);
@@ -44,15 +46,30 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
 
   const viewAllInfo = (id: string) => navigate(`/character/${id}`);
 
-  const filteredCharacters = sortedCharacters.filter((character) =>
-    character.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Aplicar filtros a los personajes generales
+  const filteredCharacters = sortedCharacters.filter((character) => {
+    const matchesSearch = character.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesSpeciesFilter =
+      speciesFilter === "All" || character.species === speciesFilter;
+    const matchesCharacterFilter =
+      characterFilter === "All" ||
+      (characterFilter === "Starred" &&
+        favoriteCharacters.some((fav) => fav.id === character.id)) ||
+      (characterFilter === "Others" &&
+        !favoriteCharacters.some((fav) => fav.id === character.id));
 
+    return matchesSearch && matchesSpeciesFilter && matchesCharacterFilter;
+  });
+
+  // Aplicar filtros a los personajes favoritos
   const filteredFavoriteCharacters = sortedFavoriteCharacters.filter(
     (character) =>
       character.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Filtrar personajes que están en favoritos
   const filteredSortedCharacters = filteredCharacters.filter(
     (character) =>
       !favoriteCharacters.some((favorite) => favorite.id === character.id)
@@ -64,7 +81,15 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
   const deletedToFavorites = (character: Character) =>
     dispatch(setDeletedFavorite({ favorite: character }));
 
-  React.useEffect(() => {
+  const handleFilterChange = (filterType: string, filterValue: string) => {
+    if (filterType === "character") {
+      setCharacterFilter(filterValue);
+    } else if (filterType === "species") {
+      setSpeciesFilter(filterValue);
+    }
+  };
+
+  useEffect(() => {
     if (error) {
       navigate("/TryAgain");
     }
@@ -88,6 +113,8 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
       searchTerm={searchTerm}
       children={children}
       activeCharacterId={activeCharacterId}
+      onFilterChange={handleFilterChange}
+      characterFilter={characterFilter}
     />
   );
 };

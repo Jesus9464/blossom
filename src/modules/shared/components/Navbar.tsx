@@ -1,8 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-
 import { Character } from "../../../common/types";
 import ItemList from "../../shared/components/ItemList";
-
 import searchIcon from "../../../assets/icons/search-icon.svg";
 import filterIcon from "../../../assets/icons/filter-icon.svg";
 import heartGreenIcon from "../../../assets/icons/heart-green-icon.svg";
@@ -22,6 +20,8 @@ type Props = {
   activeCharacterId: string | null;
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
+  onFilterChange: (filterType: string, filterValue: string) => void;
+  characterFilter: string;
 };
 
 const NavbarComponent: React.FC<Props> = ({
@@ -37,6 +37,8 @@ const NavbarComponent: React.FC<Props> = ({
   activeCharacterId,
   searchTerm,
   setSearchTerm,
+  onFilterChange,
+  characterFilter,
 }) => (
   <div className="flex flex-col md:flex-row">
     {/* Aside Section */}
@@ -51,6 +53,7 @@ const NavbarComponent: React.FC<Props> = ({
         value={searchTerm}
         filterIcon={filterIcon}
         searchIcon={searchIcon}
+        onFilterChange={onFilterChange}
       />
       <div className="w-full flex ">
         <button
@@ -62,7 +65,7 @@ const NavbarComponent: React.FC<Props> = ({
             sortOrder === "asc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
           }`}
         >
-          order A-Z
+          Order A-Z
         </button>
         <button
           onClick={() => {
@@ -73,12 +76,12 @@ const NavbarComponent: React.FC<Props> = ({
             sortOrder === "desc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
           }`}
         >
-          order Z-A
+          Order Z-A
         </button>
       </div>
 
       {/* Starred Characters Section */}
-      {favoriteCharacters.length > 0 && (
+      {favoriteCharacters.length > 0 && characterFilter !== "Others" && (
         <div className="mt-6">
           <h3 className="text-[#6B7280] mb-2">
             Starred Characters ({favoriteCharacters.length})
@@ -100,23 +103,25 @@ const NavbarComponent: React.FC<Props> = ({
       )}
 
       {/* All Characters Section */}
-      <div className="mt-6">
-        <h3 className="text-[#6B7280] mb-2">
-          Characters ({characters.length})
-        </h3>
-        <ul className="divide-y divide-gray-200">
-          {characters.map((character) => (
-            <ItemList
-              key={character.id}
-              character={character}
-              icon={heartGreyIcon}
-              buttonOnclick={() => addToFavorites(character)}
-              cardOnclick={() => viewAllInfo(character.id)}
-              isActive={Number(activeCharacterId) === Number(character.id)}
-            />
-          ))}
-        </ul>
-      </div>
+      {characterFilter !== "Starred" && (
+        <div className="mt-6">
+          <h3 className="text-[#6B7280] mb-2">
+            Characters ({characters.length})
+          </h3>
+          <ul className="divide-y divide-gray-200">
+            {characters.map((character) => (
+              <ItemList
+                key={character.id}
+                character={character}
+                icon={heartGreyIcon}
+                buttonOnclick={() => addToFavorites(character)}
+                cardOnclick={() => viewAllInfo(character.id)}
+                isActive={Number(activeCharacterId) === Number(character.id)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
     </aside>
 
     {/* Main Content - Characters Grid */}
