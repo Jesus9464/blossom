@@ -25,7 +25,10 @@ const HomeComponent: React.FC<Props> = ({
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
       {characters.map((character) => {
-        const isDisabled = favoriteCharacters.includes(character);
+        const isDisabled = favoriteCharacters.some(
+          (favCharacter) => favCharacter.id === character.id
+        );
+
         return (
           <Card
             key={character.id}
