@@ -15,9 +15,21 @@ import { setAddFavorite } from "../../../common/modules/characters/store/actions
 const HomeContainer = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const { error, loading } = useFetchCharacters();
+
   const characters = useAppSelector(charactersSelector);
   const favoriteCharacters = useAppSelector(charactersFavoriteSelector);
+
+  const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("asc");
+
+  const sortedCharacters = [...characters].sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.name.localeCompare(b.name); // order from A a Z
+    } else {
+      return b.name.localeCompare(a.name); // order from Z a A
+    }
+  });
 
   const viewAllInfo = (id: string) =>
     alert(`${JSON.stringify(id)} added to favorites`);
@@ -37,10 +49,11 @@ const HomeContainer = () => {
 
   return (
     <HomeComponent
-      characters={characters}
+      characters={sortedCharacters}
       addToFavorites={addToFavorites}
       viewAllInfo={viewAllInfo}
       favoriteCharacters={favoriteCharacters}
+      setSortOrder={setSortOrder}
     />
   );
 };

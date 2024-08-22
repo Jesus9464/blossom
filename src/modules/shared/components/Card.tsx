@@ -1,5 +1,6 @@
 import React from "react";
 import { Character } from "../../../common/types";
+import Button from "./Button";
 
 type Props = {
   character: Character;
@@ -29,24 +30,21 @@ const Card: React.FC<Props> = ({
         <h2 className="text-md font-semibold">{character.name}</h2>
         <p className="text-gray-600 mb-4">{character.species}</p>
         <div className="flex gap-4">
-          {" "}
-          <button
+          <Button
             className={`px-4 py-2 font-semibold rounded-md transition-colors duration-300 ${
               isAddToFavoritesIsDisabled
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
             onClick={onAddToFavorites}
-            disabled={isAddToFavoritesIsDisabled}
-          >
-            {addToFavoritesText}
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 transition-colors duration-300"
+            isDisabled={isAddToFavoritesIsDisabled}
+            text={addToFavoritesText}
+          />
+          <Button
+            className="px-4 py-2 bg-lime-900 text-white font-semibold rounded-md hover:bg-gray-600 transition-colors duration-300"
             onClick={onViewDetails}
-          >
-            {viewDetailsText}
-          </button>
+            text={viewDetailsText}
+          />
         </div>
       </div>
     </div>
