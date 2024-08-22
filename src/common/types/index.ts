@@ -28,3 +28,8 @@ export interface CharacterDetails {
     name: string;
   }>;
 }
+
+export interface CommentType {
+  id: string;
+  comments: string[];
+}

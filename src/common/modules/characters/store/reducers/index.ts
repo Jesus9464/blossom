@@ -1,15 +1,22 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { setAddFavorite, setCharacters, setDeletedFavorite } from "../actions";
-import { Character } from "../../../../types";
+import {
+  addCommentCharacter,
+  setAddFavorite,
+  setCharacters,
+  setDeletedFavorite,
+} from "../actions";
+import { Character, CommentType } from "../../../../types";
 
 interface CharacterState {
   characters: Character[];
   favorites: Character[];
+  comments: CommentType[];
 }
 const initialState: CharacterState = {
   characters: [],
   favorites: [],
+  comments: [],
 };
 
 const charactersReducer = createReducer(initialState, (builder) => {
@@ -34,6 +41,24 @@ const charactersReducer = createReducer(initialState, (builder) => {
       state.favorites = state.favorites.filter(
         (fav) => fav.id !== action.payload.favorite.id
       );
+    }
+  });
+
+  builder.addCase(addCommentCharacter, (state, action) => {
+    const { comment, id } = action.payload;
+
+    if (!state.comments) {
+      state.comments = [];
+    }
+
+    const existingComment = state.comments?.find((c) => c.id === id);
+
+    if (existingComment) {
+      // If it exists, add the new comment to the list
+      existingComment.comments.push(comment);
+    } else {
+      // If it does not exist, create a new entry
+      state.comments.push({ id, comments: [comment] });
     }
   });
 });
