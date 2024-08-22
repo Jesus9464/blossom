@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../common/store/hooks";
@@ -23,6 +23,7 @@ type Props = {
 const NavbarContainer: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const pathnameParams = window.location.pathname;
   const match = pathnameParams.match(/\/character\/(\d+)/);
@@ -43,7 +44,16 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
 
   const viewAllInfo = (id: string) => navigate(`/character/${id}`);
 
-  const filteredSortedCharacters = sortedCharacters.filter(
+  const filteredCharacters = sortedCharacters.filter((character) =>
+    character.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredFavoriteCharacters = sortedFavoriteCharacters.filter(
+    (character) =>
+      character.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredSortedCharacters = filteredCharacters.filter(
     (character) =>
       !favoriteCharacters.some((favorite) => favorite.id === character.id)
   );
@@ -67,13 +77,15 @@ const NavbarContainer: React.FC<Props> = ({ children }) => {
   return (
     <NavbarComponent
       characters={filteredSortedCharacters}
-      favoriteCharacters={sortedFavoriteCharacters}
+      favoriteCharacters={filteredFavoriteCharacters}
       viewAllInfo={viewAllInfo}
       addToFavorites={addToFavorites}
       deletedToFavorites={deletedToFavorites}
       setSortOrder={setSortOrder}
       setSortOrderFvaorite={setSortOrderFvaorite}
       sortOrder={sortOrder}
+      setSearchTerm={setSearchTerm}
+      searchTerm={searchTerm}
       children={children}
       activeCharacterId={activeCharacterId}
     />

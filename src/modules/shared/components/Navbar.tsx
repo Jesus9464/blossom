@@ -7,6 +7,7 @@ import searchIcon from "../../../assets/icons/search-icon.svg";
 import filterIcon from "../../../assets/icons/filter-icon.svg";
 import heartGreenIcon from "../../../assets/icons/heart-green-icon.svg";
 import heartGreyIcon from "../../../assets/icons/heart-grey-icon.svg";
+import SearchInput from "./SearchInput";
 
 type Props = {
   characters: Character[];
@@ -19,6 +20,8 @@ type Props = {
   sortOrder: "asc" | "desc";
   children: React.ReactElement;
   activeCharacterId: string | null;
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
 };
 
 const NavbarComponent: React.FC<Props> = ({
@@ -32,6 +35,8 @@ const NavbarComponent: React.FC<Props> = ({
   sortOrder,
   children,
   activeCharacterId,
+  searchTerm,
+  setSearchTerm,
 }) => (
   <div className="flex flex-col md:flex-row">
     {/* Aside Section */}
@@ -41,30 +46,20 @@ const NavbarComponent: React.FC<Props> = ({
       </h2>
 
       {/* Search Input */}
-      <div className="relative mb-6">
-        <input
-          type="text"
-          placeholder="Search or filter results"
-          className="w-full h-[52px] p-[9px_13px_9px_20px] bg-gray-200 rounded-lg pl-[40px] pr-[36px] "
-        />
-        <img
-          src={searchIcon}
-          alt="Search Icon"
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 w-5 h-5"
-        />
-        <img
-          src={filterIcon}
-          alt="Filter Icon"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 w-5 h-5 cursor-pointer"
-        />
-      </div>
+      <SearchInput
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
+        filterIcon={filterIcon}
+        searchIcon={searchIcon}
+        onClickFilter={() => console.log("abre el modal")}
+      />
       <div className="w-full flex ">
         <button
           onClick={() => {
             setSortOrder("asc");
             setSortOrderFvaorite("asc");
           }}
-          className={`px-4 py-[10px] rounded-lg border border-gray-300 bg-white mr-4 ${
+          className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4 ${
             sortOrder === "asc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
           }`}
         >
@@ -75,7 +70,7 @@ const NavbarComponent: React.FC<Props> = ({
             setSortOrder("desc");
             setSortOrderFvaorite("desc");
           }}
-          className={`px-4 py-[10px] rounded-lg border border-gray-300 bg-white mr-4  ${
+          className={`px-4 py-[10px] rounded-lg border border-gray-300  mr-4  ${
             sortOrder === "desc" ? "bg-[#EEE3FF] text-[#8054C7] mr-4" : ""
           }`}
         >
