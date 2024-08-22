@@ -22,6 +22,7 @@ const Card: React.FC<Props> = ({
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full max-w-xs mx-auto cursor-pointer">
       <img
+        onClick={onViewDetails}
         src={character.image}
         alt={character.name}
         className="w-full h-36 object-cover"
