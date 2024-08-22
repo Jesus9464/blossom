@@ -11,6 +11,7 @@ import {
 import Loading from "../../shared/components/Loading";
 import { Character } from "../../../common/types";
 import { setAddFavorite } from "../../../common/modules/characters/store/actions";
+import useSortedCharacters from "../../../common/hooks/useSortedCharacters";
 
 const HomeContainer = () => {
   const navigate = useNavigate();
@@ -21,15 +22,7 @@ const HomeContainer = () => {
   const characters = useAppSelector(charactersSelector);
   const favoriteCharacters = useAppSelector(charactersFavoriteSelector);
 
-  const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("asc");
-
-  const sortedCharacters = [...characters].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.name.localeCompare(b.name); // order from A a Z
-    } else {
-      return b.name.localeCompare(a.name); // order from Z a A
-    }
-  });
+  const { sortedCharacters, setSortOrder } = useSortedCharacters(characters);
 
   const viewAllInfo = (id: string) =>
     alert(`${JSON.stringify(id)} added to favorites`);

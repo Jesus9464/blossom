@@ -24,7 +24,7 @@ function App() {
             <NavBar />
             <Routes>
               <Route path="/" element={<HomeScreen />} />
-              <Route path="/favorite" element={<FavoriteScreen />} />
+              <Route path="/favorites" element={<FavoriteScreen />} />
               <Route path="/character" element={<CharacterScreen />} />
               <Route path="/TryAgain" element={<TryAgain />} />
             </Routes>

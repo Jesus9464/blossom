@@ -8,3 +8,7 @@ export const setCharacters = createAction<{
 export const setAddFavorite = createAction<{
   favorite: Character;
 }>("root/setAddFavorite");
+
+export const setDeletedFavorite = createAction<{
+  favorite: Character;
+}>("root/setDeletedFavorite");
