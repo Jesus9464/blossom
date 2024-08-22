@@ -25,7 +25,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/favorites" element={<FavoriteScreen />} />
-              <Route path="/character" element={<CharacterScreen />} />
+              <Route path="/character/:id" element={<CharacterScreen />} />
               <Route path="/TryAgain" element={<TryAgain />} />
             </Routes>
           </Router>

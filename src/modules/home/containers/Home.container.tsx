@@ -24,8 +24,7 @@ const HomeContainer = () => {
 
   const { sortedCharacters, setSortOrder } = useSortedCharacters(characters);
 
-  const viewAllInfo = (id: string) =>
-    alert(`${JSON.stringify(id)} added to favorites`);
+  const viewAllInfo = (id: string) => navigate(`/character/${id}`);
 
   const addToFavorites = (character: Character) =>
     dispatch(setAddFavorite({ favorite: character }));

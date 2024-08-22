@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import FavoriteComponent from "../components/Favorite.component";
 import { useAppDispatch, useAppSelector } from "../../../common/store/hooks";
@@ -8,6 +9,7 @@ import { Character } from "../../../common/types";
 import { setDeletedFavorite } from "../../../common/modules/characters/store/actions";
 
 const FavoriteContainer = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const favoriteCharacters = useAppSelector(charactersFavoriteSelector);
@@ -15,8 +17,7 @@ const FavoriteContainer = () => {
   const { sortedCharacters, setSortOrder } =
     useSortedCharacters(favoriteCharacters);
 
-  const viewAllInfo = (id: string) =>
-    alert(`${JSON.stringify(id)} added to favorites`);
+  const viewAllInfo = (id: string) => navigate(`/character/${id}`);
 
   const deletedToFavorites = (character: Character) =>
     dispatch(setDeletedFavorite({ favorite: character }));
