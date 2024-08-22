@@ -1,10 +1,10 @@
 import React from "react";
 import { useLazyQuery } from "@apollo/client";
 
-import { CharactersData } from "../../../common/types";
-import { GET_CHARACTERS } from "../../../common/graphql/querys";
-import { useAppDispatch } from "../../../common/store/hooks";
-import { setCharacters } from "../../../common/modules/characters/store/actions";
+import { setCharacters } from "../modules/characters/store/actions";
+import { useAppDispatch } from "../store/hooks";
+import { CharactersData } from "../types";
+import { GET_CHARACTERS } from "../graphql/querys";
 
 const useFetchCharacters = () => {
   const dispatch = useAppDispatch();

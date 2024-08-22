@@ -28,9 +28,6 @@ export const GET_CHARACTER_DETAILS = gql`
       location {
         name
       }
-      episode {
-        name
-      }
     }
   }
 `;

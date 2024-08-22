@@ -6,14 +6,15 @@ import ApolloClientProvider from "./common/graphql/ApolloClient";
 import { persistor, store } from "./common/store";
 
 //Routers
-import HomeScreen from "./modules/home/screens/Home.screen";
-import FavoriteScreen from "./modules/favorite/screens/Favorite.screen";
 import CharacterScreen from "./modules/characters/screens/Character.screen";
 import TryAgain from "./modules/shared/components/TryAgain";
+import RedirectToCharacter from "./modules/shared/container/RedirectToCharacter";
+
+//navbar navigation
+import NavbarContainer from "./modules/shared/container/Navbar";
 
 //styles
 import "./styles/index.css";
-import NavBar from "./modules/shared/components/Navbar";
 
 function App() {
   return (
@@ -21,13 +22,13 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <ApolloClientProvider>
           <Router>
-            <NavBar />
-            <Routes>
-              <Route path="/" element={<HomeScreen />} />
-              <Route path="/favorites" element={<FavoriteScreen />} />
-              <Route path="/character/:id" element={<CharacterScreen />} />
-              <Route path="/TryAgain" element={<TryAgain />} />
-            </Routes>
+            <NavbarContainer>
+              <Routes>
+                <Route path="/" element={<RedirectToCharacter />} />
+                <Route path="/character/:id" element={<CharacterScreen />} />
+                <Route path="/TryAgain" element={<TryAgain />} />
+              </Routes>
+            </NavbarContainer>
           </Router>
         </ApolloClientProvider>
       </PersistGate>

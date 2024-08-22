@@ -24,9 +24,6 @@ export interface CharacterDetails {
   location: {
     name: string;
   };
-  episode: Array<{
-    name: string;
-  }>;
 }
 
 export interface CommentType {

@@ -20,8 +20,6 @@ const CharacterContainer = () => {
   const navigate = useNavigate();
 
   const [comment, setComment] = React.useState<string>("");
-  const [isDisabledAddToFavorite, setIsDisabledAddToFavorite] =
-    React.useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
   const { loading, error, data } = useQuery(GET_CHARACTER_DETAILS, {
@@ -34,6 +32,10 @@ const CharacterContainer = () => {
 
   const comments = useAppSelector((state) => commentSelector(state, idComment));
   const favoriteCharacters = useAppSelector(charactersFavoriteSelector);
+
+  const alreadyExistsToFavorite = favoriteCharacters.some(
+    (favorite) => favorite.id === characterDetails?.id
+  );
 
   const handleAddComment = () => {
     if (comment.trim()) {
@@ -64,15 +66,6 @@ const CharacterContainer = () => {
       navigate("/TryAgain");
     }
   }, [error, navigate]);
-  React.useEffect(() => {
-    const alreadyExistsToFavorite = favoriteCharacters.some(
-      (favorite) => favorite.id === characterDetails?.id
-    );
-
-    if (alreadyExistsToFavorite) {
-      setIsDisabledAddToFavorite(true);
-    }
-  }, [characterDetails?.id, favoriteCharacters]);
 
   if (loading) {
     return <Loading />;
@@ -87,7 +80,7 @@ const CharacterContainer = () => {
       comments={comments}
       comment={comment}
       addToFavorites={addToFavorites}
-      isDisabledAddToFavorite={isDisabledAddToFavorite}
+      isDisabledAddToFavorite={alreadyExistsToFavorite}
     />
   );
 };
