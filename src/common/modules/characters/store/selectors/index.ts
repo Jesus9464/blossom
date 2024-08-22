@@ -8,3 +8,8 @@ export const charactersSelector = createDraftSafeSelector(
   rootSelector,
   (characters) => characters.characters.characters
 );
+
+export const charactersFavoriteSelector = createDraftSafeSelector(
+  rootSelector,
+  (characters) => characters.characters.favorites
+);
