@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
+import arrowBackIcon from "../../../assets/icons/arrow-back-icon.svg";
+
 type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,6 +17,7 @@ const SearchInput: React.FC<Props> = ({
   filterIcon,
   onFilterChange,
 }) => {
+  const isMobile = window.innerWidth < 768;
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedCharacterFilter, setSelectedCharacterFilter] = useState("All");
   const [selectedSpeciesFilter, setSelectedSpeciesFilter] = useState("All");
@@ -55,7 +58,6 @@ const SearchInput: React.FC<Props> = ({
   };
 
   const applyFilters = () => {
-    // Aplica los filtros seleccionados solo si han cambiado
     if (
       selectedCharacterFilter !== initialCharacterFilter ||
       selectedSpeciesFilter !== initialSpeciesFilter
@@ -65,7 +67,7 @@ const SearchInput: React.FC<Props> = ({
       setInitialCharacterFilter(selectedCharacterFilter);
       setInitialSpeciesFilter(selectedSpeciesFilter);
     }
-    setIsPopoverOpen(false); // Cierra el popover después de aplicar los filtros
+    setIsPopoverOpen(false);
   };
 
   const isFilterModified =
@@ -97,28 +99,44 @@ const SearchInput: React.FC<Props> = ({
         {isPopoverOpen && (
           <div
             ref={popoverRef}
-            className="absolute z-10 w-80 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm"
-            style={{ top: "60px", right: "10px" }}
+            className={`fixed inset-0 z-50 bg-white border border-gray-200 shadow-lg transition-opacity duration-300 ${
+              isMobile ? "flex flex-col" : "absolute"
+            }`}
+            style={
+              isMobile
+                ? { top: 0, bottom: 0, right: 0 }
+                : { top: "60px", right: "10px" }
+            }
           >
-            <div className="px-4 py-3">
+            {isMobile && (
+              <button
+                onClick={() => setIsPopoverOpen(false)}
+                className="absolute top-4 left-4 text-gray-500"
+              >
+                <img src={arrowBackIcon} alt="Back" className="w-6 h-6" />
+              </button>
+            )}
+            <div
+              className={`flex-1 p-4 overflow-auto pt-16 bg-white ${
+                !isMobile && "rounded-lg border border-gray-200"
+              }`}
+            >
               <h3 className="text-[#6B7280] mb-2">Character</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {["All", "Starred", "Others"].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => handleCharacterFilterClick(filter)}
                     className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 text-[#8054C7] text-center transition-colors duration-300 hover:bg-[#E5D9FF] ${
-                      selectedCharacterFilter === filter ? "bg-[#EEE3FF]" : ""
+                      selectedCharacterFilter === filter ? "bg-[#EEE3FF] " : ""
                     }`}
                   >
                     {filter}
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="px-4 py-3">
               <h3 className="text-[#6B7280] mb-2">Species</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {["All", "Human", "Alien"].map((filter) => (
                   <button
                     key={filter}
@@ -131,20 +149,37 @@ const SearchInput: React.FC<Props> = ({
                   </button>
                 ))}
               </div>
+              {!isMobile && (
+                <div className="p-4 border-t border-gray-200 bg-white">
+                  <button
+                    onClick={applyFilters}
+                    disabled={!isFilterModified}
+                    className={`w-full px-4 py-2 font-semibold  rounded-md transition-colors duration-300 ${
+                      !isFilterModified
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-[#8054C7] text-white hover:bg-[#6A3F7C]"
+                    }`}
+                  >
+                    Filter
+                  </button>
+                </div>
+              )}
             </div>
-            <div className="px-4 py-3">
-              <button
-                onClick={applyFilters}
-                disabled={!isFilterModified}
-                className={`w-full px-4 py-2 font-semibold rounded-md transition-colors duration-300 ${
-                  !isFilterModified
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-[#8054C7] text-white hover:bg-[#6A3F7C]"
-                }`}
-              >
-                Filter
-              </button>
-            </div>
+            {isMobile && (
+              <div className="p-4 border-t border-gray-200 bg-white">
+                <button
+                  onClick={applyFilters}
+                  disabled={!isFilterModified}
+                  className={`w-full px-4 py-2 font-semibold  rounded-md transition-colors duration-300 ${
+                    !isFilterModified
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-[#8054C7] text-white hover:bg-[#6A3F7C]"
+                  }`}
+                >
+                  Filter
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
